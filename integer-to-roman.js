@@ -26,7 +26,10 @@ var intToRoman = function(num) {
 
     let max = 0, res = '', numRest = num;
 
-    while(numRest > 0){
+    // O(1)
+    // because the largest roman number is 3999 and the number of operations do not scale with input size
+    // because the input number is bounded and for practical purposes it is O(1)
+    while(numRest > 0){ 
         max = maximumSubtract(numRest, nums);
         res = res + rls[max];
         numRest = numRest - max;
@@ -39,7 +42,7 @@ function maximumSubtract(num, nums){
 
     let res = 0;
     
-    for (let i = 0; i < nums.length; i++) {
+    for (let i = 0; i < nums.length; i++) { // O(1) constant the array is fixed
         if(num - nums[i] === 0) return nums[i];
         if(num - nums[i] < 0) return res;
         if(i === nums.length - 1) return nums[i];
@@ -52,3 +55,9 @@ function maximumSubtract(num, nums){
 
 // console.log(maximumSubtract(9, [1,4,5,9,10,40,50,90,100,400,500,900,1000]));
 console.log(intToRoman(1994));
+
+// tc: O(1)
+// sc: O(1)
+// again the it is constant because the arrays and object do not scale with input
+
+
