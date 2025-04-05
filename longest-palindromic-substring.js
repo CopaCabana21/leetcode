@@ -4,51 +4,56 @@
  */
 var longestPalindrome = function(s){
 
-    let max = [0,0];
+    let max = '';
 
     for (let i = 0; i < s.length; i++) {
         let res = checkAtIndex(s, i);
-        // console.log(i, res, s.slice(res[0], res[1]+1));
+        // console.log(i, res, res.length);
 
-        if(res[1] - res[0] + 1 > max[1] - max[0] + 1){
+        if(res.length >  max.length){
             max = res
         }
     }
     
-    return s.slice(max[0], max[1]+1);
+    return max;
 };
 
 function checkAtIndex(s, index){
 
-    let left = 1, right = 1, substr = '';
-
+    let left = 1, right = 1, substr = s[index];
 
     while(s[index - left] && (s[index - left] === s[index] || s[index + right] === s[index])){
         if(s[index - left] === s[index]) {
+            substr = s[index - left] + substr;
             left++;
         };
 
         if(s[index + right] === s[index]) {
+            substr = substr + s[index + right];
             right++;
         };
     }
-
     while((index - left) >= 0){
 
-        if(s[index - left] !== s[index + right]) return [index - left + 1, index + right - 1];
+        if(s[index - left] !== s[index + right]) return substr;
+
+        substr = substr + s[index + right];
+        substr = s[index - left] + substr;
 
         left++;
         right++;
 
+        // console.log('substr', substr);
+
     }
 
-    return [0, index + right - 1];
+    return substr;
 
 }
 
 
 
-console.log(longestPalindrome('bananas'));
+console.log(longestPalindrome('abcbaoabcba'));
 
 '222020221'
 
