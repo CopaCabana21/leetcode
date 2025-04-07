@@ -34,4 +34,30 @@ var reverseList = function(head) {
 
 };
 
-console.log(reverseList(arrayToLinkedList([1,2,3,4,5])));
+// console.log(reverseList(arrayToLinkedList([1,2,3,4,5])));
+
+
+/// --------------------------------------------------------
+
+// recursive
+
+var reverseList2 = function(head) {
+
+    if(!head || !head.next){
+        return head;
+    }
+
+    let newHead = reverseList2(head.next);
+    let forward = head.next;
+    forward.next = head;
+    head.next = null;
+
+    return newHead;
+
+};
+
+// * -> * -> * -> * -> null
+// * <- * -> * -> * -> null
+
+
+console.log(JSON.stringify(reverseList2(arrayToLinkedList([]))));
