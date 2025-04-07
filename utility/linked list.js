@@ -51,20 +51,6 @@ function linkedListToArray(head){
     return arr;
 }
 
-// linkedListToArray
-function linkedListToArray(head){
-
-    let current = head;
-    let arr = [];
-
-    while(current){
-        arr.push(current.val);
-        current = current.next;
-    }
-
-    return arr;
-}
-
 function nodeAt(head, index){
 
     let current = head;
@@ -76,6 +62,26 @@ function nodeAt(head, index){
 
     return -1;
 }
+
+var reverseList = function(head) {
+
+    if(!head) return head;
+    
+    let current = head;
+    let back = null, forward;
+
+    while(current){
+
+        forward = current.next;
+        current.next = back;
+        back = current;
+        current = forward;
+    }
+    
+
+    return back;
+
+};
 
 export {arrayToLinkedList, nodeAt, linkedListToArray};
 
