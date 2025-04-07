@@ -59,6 +59,9 @@ function reverseDLL(head) {
         current.next = current.prev;
         current.prev = forward;
 
+        // OR thanks to JS use destructuring
+        // [current.prev, current.next] = [current.next, current.prev];
+
         head = current;
         current = forward;
     }
