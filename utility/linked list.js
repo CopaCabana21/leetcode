@@ -22,12 +22,12 @@ function arrayToLinkedList(arr){
 
 // node at index
 
-function noteAt(head, index){
+function nodeAt(head, index){
 
     let current = head;
     let count = 0;
 
-    while(current.next){
+    while(current){
         if(count === index) return current;
         current = current.next;
         count++;
@@ -51,18 +51,6 @@ function linkedListToArray(head){
     return arr;
 }
 
-function nodeAt(head, index){
-
-    let current = head;
-    let count = 0;
-
-    while(current.next){
-        if(count == index) return current;
-    }
-
-    return -1;
-}
-
 var reverseList = function(head) {
 
     if(!head) return head;
@@ -82,6 +70,46 @@ var reverseList = function(head) {
     return back;
 
 };
+
+// ---------------------------------------------------------------------------
+
+// length of a loop
+
+function countNodesinLoop(head) {
+
+    let slow = head, fast = head;
+    
+    while(fast && fast.next){
+
+        slow = slow.next;
+        fast = fast.next.next;
+
+        if(slow === fast) break;
+    }
+
+    if(!(fast && fast.next)) return 0;
+
+
+    let count = 1;
+    slow = slow.next;
+    while(slow !== fast){
+        slow = slow.next;
+        count++;
+    }
+
+    return count;
+}
+
+// console.log(arrayToLinkedList([3,2,0,-4]));
+let head = arrayToLinkedList([3,2,0,-4]);
+// console.log(nodeAt(head,3));
+nodeAt(head,3).next = nodeAt(head,1);
+// console.log(nodeAt(head,3));
+
+console.log(countNodesinLoop(head));
+
+// ---------------------------------------------------------------------------
+
 
 export {arrayToLinkedList, nodeAt, linkedListToArray};
 
