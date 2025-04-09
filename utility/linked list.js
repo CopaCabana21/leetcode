@@ -106,7 +106,7 @@ let head = arrayToLinkedList([3,2,0,-4]);
 nodeAt(head,3).next = nodeAt(head,1);
 // console.log(nodeAt(head,3));
 
-console.log(countNodesinLoop(head));
+// console.log(countNodesinLoop(head));
 
 // ---------------------------------------------------------------------------
 
