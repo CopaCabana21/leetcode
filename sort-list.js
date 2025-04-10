@@ -68,7 +68,7 @@ console.log(JSON.stringify(sortList(arrayToLinkedList([1,4,5,6,1,8,9,2,10,11,2,3
 
 var sortList2 = function(head){
 
-    let slow = head, fast = head, prev;
+    let slow = head, fast = head, prev = null;
     if(!head || !head.next) return head;
 
     // reach the middle
