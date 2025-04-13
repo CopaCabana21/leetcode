@@ -23,6 +23,8 @@ var deleteNode = function(node) {
 
 };
 
+// sc: O(n)
+
 // ------------------------------------
 
 import {arrayToLinkedList, noteAt, linkedListToArray} from './utility/linked list.js'

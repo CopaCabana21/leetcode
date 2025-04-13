@@ -83,6 +83,9 @@ var mergeTwoListsAgain = function(l1, l2){
 
     // compare and add to last node
     while(l1 && l2){
+
+        let less = (l1.val <= l2.val)? l1 : l2;
+
         if(l1.val <= l2.val){
             curr.next = l1;
             curr = l1;
