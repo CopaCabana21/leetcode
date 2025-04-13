@@ -1,11 +1,4 @@
 /**
- * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
- * }
- */
-/**
  * @param {ListNode} l1
  * @param {ListNode} l2
  * @return {ListNode}
@@ -16,6 +9,8 @@ function ListNode(val, next) {
     this.next = (next===undefined ? null : next)
 }
 
+
+import { arrayToLinkedList } from "./utility/linked list.js";
 
 var addTwoNumbers = function(l1, l2) {
 
@@ -41,22 +36,6 @@ var addTwoNumbers = function(l1, l2) {
 
     return dummy.next;
 };
-
-// ------------------------------
-
-function arrayToLinkedList(arr){
-
-    let dummy = new ListNode(-1);
-    let current = dummy;
-
-    for (const ele of arr) {
-        current.next = new ListNode(ele);
-        current = current.next;
-    }
-
-    return dummy.next;
-}
-
 
 const l1 = arrayToLinkedList([9,9,9,9,9,9,9]);
 const l2 = arrayToLinkedList([9,9,9,9]);
