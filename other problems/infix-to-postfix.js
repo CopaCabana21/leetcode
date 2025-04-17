@@ -32,7 +32,7 @@ function infixToPostfix(str){
 
         if(priority[str[i]]){
             // check priority
-            if(priority[str[i]] > priority[stack[stack.length - 1]] || stack.length === 0 || stack[stack.length - 1] === '('){
+            if(stack.length === 0 || priority[str[i]] > priority[stack[stack.length - 1]] || stack[stack.length - 1] === '('){
 
                 stack.push(str[i])
 
