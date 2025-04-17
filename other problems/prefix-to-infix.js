@@ -4,7 +4,6 @@
 function prefixToInfix(str){
 
     const stack = [];
-    let infix;
     let newExpre;
 
     let operators = new Set(['^','*','/','+','-'])
