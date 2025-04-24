@@ -5,51 +5,25 @@
 var nextGreaterElements = function(nums) {
     
     const stack = [];
-    const map = new Map();
-    const map2 = new Map();
+    let len = nums.length;
+    const res = Array(len).fill(-1);
 
-    for (let i = 0; i < nums.length; i++) {
+    for (let i = 0; i < 2*nums.length; i++) {
 
-        // console.log(i, nums[i], stack, map);
+        // console.log(i % len, nums[i % len], stack, res);
 
-        while(stack.length !== 0 && stack[stack.length-1] < nums[i]){
-            map.set(stack.pop(), nums[i])
+        while(stack.length !== 0 && nums[stack[stack.length-1]] < nums[i % len]){
+            res[stack.pop()] = nums[i % len]; // O(1)
         }
 
-        stack.push(nums[i])
+        stack.push(i % len) // O(1)
     }
 
-    for (let i = 0; i < nums.length; i++) {
+    return res
 
-        // console.log(i, nums[i], stack, map2);
-
-        while(stack.length !== 0 && stack[stack.length-1] < nums[i]){
-            map2.set(stack.pop(), nums[i])
-        }
-    }
-
-    console.log(stack, map, map2);
-
-    return nums.map(ele => {
-        let num;
-
-        if(map.has(ele)){
-            num = map.get(ele);
-            map.delete(ele);
-        }else if(map2.has(ele)){
-            num = map2.get(ele);
-            map2.delete(ele);
-        }else{
-            num = -1;
-        }
-
-        // console.log(ele, num, map, map2);
-
-        return num;
-
-    });
-    
 }
 
+// tc: O(2n) -> O(n)
+// sc: O(2n) -> O(n)
 
 console.log(nextGreaterElements([1,2,3,4,5,6,5,4,5,1,2,3]));
