@@ -110,27 +110,52 @@ temp = mergeTwoListsAgain(arrToll([1, 2, 5, 6]), arrToll([3, 4, 7, 9]));
 // -------------------------------------------------------------------
 // again
 
-var mergeTwoLists3 = function (l1, l2) {
+// var mergeTwoLists3 = function (l1, l2) {
 
-  let dummy = new ListNode(-1);
-  let curr = dummy;
+//   let dummy = new ListNode(-1);
+//   let curr = dummy;
 
-  while (l1 && l2) {
-    if (l1.val < l2.val) {
-      curr.next = l1;
-      curr = l1;
-      l1 = l1.next;
-    } else {
-      curr.next = l2;
-      curr = l2;
-      l2 = l2.next;
-    }
+//   while (l1 && l2) {
+//     if (l1.val < l2.val) {
+//       curr.next = l1;
+//       curr = l1;
+//       l1 = l1.next;
+//     } else {
+//       curr.next = l2;
+//       curr = l2;
+//       l2 = l2.next;
+//     }
+//   }
+
+//   curr.next = l1? l1 : l2;
+
+//   return dummy.next;
+// }
+
+// let res3 = mergeTwoLists3(arrToll([1,2,4]), arrToll([1,3,4]));
+// console.log(llToArr(res3));
+
+
+// again recursive
+
+var mergeTwoLists4 = function (l1, l2) {
+
+  if (!l1) return l2;
+  if (!l2) return l1;
+
+  let curr;
+
+  if (l1.val < l2.val) {
+    curr = l1;
+    curr.next = mergeTwoLists4(l1.next, l2);
+  } else {
+    curr = l2;
+    curr.next = mergeTwoLists4(l1, l2.next);
   }
 
-  curr.next = l1? l1 : l2;
+  return curr;
 
-  return dummy.next;
 }
 
-let res3 = mergeTwoLists3(arrToll([1,2,4]), arrToll([1,3,4]));
+let res3 = mergeTwoLists4(arrToll([1, 2, 4]), arrToll([1, 3, 4]));
 console.log(llToArr(res3));
