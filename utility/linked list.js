@@ -6,7 +6,7 @@ function ListNode(val) {
 
 // array to linked list
 
-function arrayToLinkedList(arr){
+function arrToll(arr){
 
     let dummy = new ListNode(-1);
     let current = dummy;
@@ -38,7 +38,7 @@ function nodeAt(head, index){
 
 // linked list to array
 
-function linkedListToArray(head){
+function llToArr(head){
 
     let current = head;
     let arr = [];
@@ -100,8 +100,8 @@ function countNodesinLoop(head) {
     return count;
 }
 
-// console.log(arrayToLinkedList([3,2,0,-4]));
-let head = arrayToLinkedList([3,2,0,-4]);
+// console.log(arrToll([3,2,0,-4]));
+let head = arrToll([3,2,0,-4]);
 // console.log(nodeAt(head,3));
 nodeAt(head,3).next = nodeAt(head,1);
 // console.log(nodeAt(head,3));
@@ -111,7 +111,7 @@ nodeAt(head,3).next = nodeAt(head,1);
 // ---------------------------------------------------------------------------
 
 
-export {arrayToLinkedList, nodeAt, linkedListToArray};
+export {arrToll, nodeAt, llToArr};
 
 
 
