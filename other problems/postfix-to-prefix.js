@@ -1,58 +1,55 @@
 // https://www.geeksforgeeks.org/postfix-prefix-conversion/
 
 
-function postfixToPrefix(str){
+function postfixToPrefix(str) {
 
-    const stack = [];
-    let newExpre;
-    
-    let operators = new Set(['^','*','/','+','-']);
+  const stack = [];
+  let newExpre;
 
-    for (let i = 0; i < str.length; i++) {
+  let operators = new Set(['^', '*', '/', '+', '-']);
 
-        console.log(i, str[i], stack);
+  for (let i = 0; i < str.length; i++) {
 
-        if(operators.has(str[i])){
+    console.log(i, str[i], stack);
 
-            newExpre = stack.pop();
-            newExpre = str[i] + stack.pop() + newExpre;
-            stack.push(newExpre);
+    if (operators.has(str[i])) {
 
-        }else{
-            stack.push(str[i]);
-        }
+      newExpre = stack.pop();
+      newExpre = str[i] + stack.pop() + newExpre;
+      stack.push(newExpre);
 
+    } else {
+      stack.push(str[i]);
     }
 
-    return stack.pop();
-    
+  }
+
+  return stack.pop();
+
 }
 
-console.log(postfixToPrefix('ABC/-AK/L-*'));
+// console.log(postfixToPrefix('ABC/-AK/L-*'));
 
 
+// -----------------------------------------------------------------
+// redo
 
-// again
+function postfixToPrefix2(str) {
 
-function postfixToPrefixAgain(str){
+  let operators = new Set(['^', '*', '/', '+', '-']);
+  let stack = [];
 
-
-    const stack = [];
-
-    const symbols = new Set(['^', '*', '/', '+', '-']);
-
-    for (let i = 0; i < str.length; i++) {
-        
-        if(symbols.has(str[i])){
-            const second = stack.pop();
-            stack.push(str[i] + stack.pop() + second);
-        }else{
-            stack.push(str[i])
-        }
-
+  for (let i = 0; i < str.length; i++) {
+    if(operators.has(str[i])){
+      let top = stack.pop();
+      let expr = str[i] + stack.pop() + top;
+      stack.push(expr);
+    }else{
+      stack.push(str[i])
     }
-    
-    return stack.pop();
+  }
+
+  return stack[0]
 }
 
-console.log(postfixToPrefixAgain('ABC/-AK/L-*'));
+console.log(postfixToPrefix2('ABC/-AK/L-*'));
