@@ -75,3 +75,18 @@ var longestPalindrome = function (s) {
 
 console.log(longestPalindrome('abcbaoabcbaabbv'));
 // console.log(longestPalindrome('abbv'));
+
+
+// Time complexity for longest palindromic substring
+// in the worst case by reusing the palindrome each element
+// we get a constant time check of at most 3 checks.
+
+// last longest palindrome
+// aaaaaaaaaaaaaaaa
+// |.....^.....|
+// for the char we use the symetry, and we only expand 2 times.
+// aaaaaaaaaaaaaaaaa
+// ..|...^*.....|
+
+// The tc is O(n*3) -> O(n)
+// sc: O(n)

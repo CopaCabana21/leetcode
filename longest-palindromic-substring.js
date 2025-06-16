@@ -152,6 +152,7 @@ var longestPalindrome3 = function (s) {
 // The tc is O(n*3) -> O(n)
 // sc: O(n)
 
+
 console.log(longestPalindrome3('abcbaoabcba'));
 // it also works for even palindromes
 console.log(longestPalindrome3('abbv'));
