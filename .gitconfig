@@ -1,0 +1,2 @@
+[alias]
+  commit-files = "!f() { git commit -m \"Updated: $(git diff --name-only --cached | tr '\n' ' ')\"; }; f"
