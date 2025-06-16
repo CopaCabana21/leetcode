@@ -2,102 +2,144 @@
  * @param {string} s
  * @return {string}
  */
-var longestPalindrome = function(s){
 
-    let max = '';
 
-    for (let i = 0; i < s.length; i++) {
-        let res = checkAtIndex(s, i);
-        // console.log(i, res, res.length);
+// expand method
+var longestPalindrome = function (s) {
 
-        if(res.length >  max.length){
-            max = res
-        }
+  let max = '';
+
+  function checkAtRange(left, right) {
+    while (left > 0 && right < s.length - 1 && s[left - 1] === s[right + 1]) {
+      left -= 1;
+      right += 1;
     }
-    
-    return max;
+
+    let res = s.slice(left, right + 1);
+
+    return max.length < res.length ? res : max;
+  }
+
+  for (let i = 0; i < s.length; i++) {
+    // check odd
+    max = checkAtRange(i, i);
+
+    if (s[i + 1] === s[i]) {
+      // check even
+      max = checkAtRange(i, i + 1);
+    }
+  }
+
+  return max;
 };
 
-function checkAtIndex(s, index){
+// tc: O(
+//  even: 2 * (n/2)(n/2+1)/2 + 
+// odd: (2 * (n/2)(n/2+1)/2) + (n+1)/2
+// ) -> O(n^2)
+// sc: O(1)
 
-    let left = 1, right = 1, substr = s[index];
 
-    while(s[index - left] && (s[index - left] === s[index] || s[index + right] === s[index])){
-        if(s[index - left] === s[index]) {
-            substr = s[index - left] + substr;
-            left++;
-        };
 
-        if(s[index + right] === s[index]) {
-            substr = substr + s[index + right];
-            right++;
-        };
+// console.log(longestPalindrome('abcbaoabcba'));
+// console.log(longestPalindrome3('abbdef'));
+
+
+// -------------------------------------------------------------------
+// expand method, without condition checking also tc: O(n^2)
+
+var longestPalindrome2 = function (s) {
+
+  let max = '';
+
+  function checkAtIndex2(left, right) {
+
+    while (left >= 0 && right < s.length && s[left] === s[right]) {
+      left--;
+      right++;
     }
-    while((index - left) >= 0){
+    console.log(left + 1, right, s.slice(left + 1, right));
+    return s.slice(left + 1, right);
+  }
 
-        if(s[index - left] !== s[index + right]) return substr;
+  for (let i = 0; i < s.length; i++) {
+    let odd = checkAtIndex2(i, i);
+    let even = checkAtIndex2(i, i + 1);
 
-        substr = substr + s[index + right];
-        substr = s[index - left] + substr;
-
-        left++;
-        right++;
-
-        // console.log('substr', substr);
-
-    }
-
-    return substr;
-
-}
-
-
-
-console.log(longestPalindrome('abcbaoabcba'));
-
-'222020221'
-
-'abcdcba'
-'abcdcdc'
-'bananas'
-'abcbaooooooo'
-'abcbaoabcba'
-
-
-
-
-
-// expand method, also sc: O(n^2)
-
-var longestPalindrome2 = function(s){
-
-    let max = '';
-
-    function checkAtIndex2(left, right){
-
-        while(left >= 0 && right < s.length && s[left] === s[right]){
-            left--;
-            right++;
-        }
-        console.log(left + 1, right, s.slice(left + 1, right));
-        return s.slice(left + 1, right);
+    if (odd.length > max.length) {
+      max = odd;
     }
 
-    for (let i = 0; i < s.length; i++) {
-        let odd = checkAtIndex2(i, i);
-        let even = checkAtIndex2(i, i + 1);
-
-        if(odd.length >  max.length){
-            max = odd;
-        }
-
-        if(even.length >  max.length){
-            max = even;
-        }
+    if (even.length > max.length) {
+      max = even;
     }
-    
-    return max;
+  }
+
+  return max;
 };
 
 
-console.log(longestPalindrome2('bb'));
+// console.log(longestPalindrome2('bb'));
+
+
+// ------------------------------------------------------------------------
+// Manacher's algorithm in algorithms folder !!
+
+var longestPalindrome3 = function (s) {
+
+  // Use a modified string
+  // #a#b#c#b#a#b#b#g
+  // so that the even palindromes expand from #. i.e 'b#b'
+  // odd and even diameters are added by 1
+  s = '#' + [...s].join('#') + '#';
+
+  let n = s.length;
+  let palins = Array(n).fill(0);
+  let max = '';
+
+  // right most palindrome
+  let l = 0, r = 0;
+
+  function checkAtRange(left, right) {
+    while (left > 0 && right < n - 1 && s[left - 1] === s[right + 1]) {
+      left -= 1;
+      right += 1;
+    }
+    return (right - left) / 2;
+  }
+
+  for (let i = 0; i < n; i++) {
+
+    // reuse palindromes with:
+
+    // .....(l.....o.....r)
+    // ...............i...
+    // ..(lj...j..rj)......
+
+    if (i < r) {
+      palins[i] = Math.min(r - i, palins[l + r - i]);
+    }
+
+    // expand from center
+    palins[i] = checkAtRange(i - palins[i], i + palins[i]);
+
+    if (r <= i + palins[i]) {
+      l = i - palins[i];
+      r = i + palins[i];
+    }
+
+    if (max.length < (2 * palins[i] + 1)) {
+      max = s.slice(i - palins[i], i + palins[i] + 1)
+    }
+
+  }
+  // odd and even diameters are added by 1
+  console.log(palins);
+  
+  return max.replaceAll('#', '');
+};
+
+console.log(longestPalindrome3('abcbaoabcba'));
+// it also works for even palindromes
+console.log(longestPalindrome3('abbv'));
+console.log(longestPalindrome3('abbbvdfd'));
