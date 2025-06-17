@@ -11,3 +11,12 @@ class Solution:
                 0 if must_pick else solve(i+1, False)
                 )
         return solve(0, False)
+    
+def myFunc():
+  yield ""
+  yield 51
+  yield "Good Bye"
+  
+x = myFunc()
+  
+print([i for i in x])
