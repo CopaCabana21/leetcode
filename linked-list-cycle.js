@@ -50,3 +50,8 @@ var hasCycle2 = function(head) {
     return false;
 
 };
+
+
+// --------------------------------------------------------
+// redo
+
