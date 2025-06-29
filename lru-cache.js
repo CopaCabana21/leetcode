@@ -76,16 +76,17 @@ var LRUCache = function (capacity) {
 
 LRUCache.prototype.get = function (key) { // O(3)
 
-  if (!this.map.has(key)) return -1; // O(1)
-
   const node = this.map.get(key); // O(1)
+
+  if (!node) return -1; // O(1)
+
   this.queue.moveToFront(node); //  O(1)
   return node.val;
 };
 
 LRUCache.prototype.put = function (key, value) {
-  if (this.map.has(key)) {
-    const node = this.map.get(key);
+  const node = this.map.get(key);
+  if (node) {
     // update value
     node.val = value;
     this.queue.moveToFront(node); //  O(1)
