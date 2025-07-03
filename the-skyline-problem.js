@@ -160,7 +160,7 @@ var getSkyline = function (buildings) {
 // tc: O(n * log n)
 // for every n there's an insert of log n and also a pop that contains a O(1) lookup in a set
 
-// sc: O(2n + n + n) -> O(n)
+// sc: O(2n + n + n) -> O(nh)
 
 var getSkyline = function (buildings) {
 

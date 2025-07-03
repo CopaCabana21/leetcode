@@ -16,7 +16,7 @@ function ppBinaryTree(node, prefix = '', isLeft = true) {
   ppBinaryTree(node.left, prefix + (isLeft ? "    " : "│   "), true);
 }
 
-function ppBinaryHeap(heap, index, prefix = '', isLeft = true) {
+function ppBinaryHeap(heap, index = 0, prefix = '', isLeft = true) {
 
   let arr = heap.arr;
   if (index > arr.length - 1) return;
