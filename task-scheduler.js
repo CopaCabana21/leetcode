@@ -125,15 +125,23 @@ class MaxPQ {
 
 }
 
+
+// T = total number of tasks
+// U = number of **unique tasks** (max 26)
+// n = cooldown
+
+
 var leastInterval = function (tasks, n) {
 
-  let freqs = {}, res = [];
+  let freqs = {};
+  // O(T)
   for (const task of tasks) {
     freqs[task] = (freqs[task] || 0) + 1;
   }
 
   let maxPQ = new MaxPQ();
 
+  // O(U * log(U)) -> O(26 * log(26)) -> O(1)
   for (const task in freqs) {
     maxPQ.insert([task, freqs[task]], freqs[task]);
   }
@@ -141,37 +149,59 @@ var leastInterval = function (tasks, n) {
   let waitQueue = new mQueue();
   let interval = 0;
 
+  // based on the formula when n >= number of taks
+  // time = (n+1)*(max_freq-1)+count_maxfreq_task
+
+  // an upper bound exageration is: time ≤ T + ((n+1) * (maxFreq - 1))
+  // where there's no task left to fill
+  // so for each time there's log(U)
+
+  // the big O for this part: O(time * log(U))
+  // -> O((T + ((n+1) * (maxFreq - 1))) * log(U)) -> 
+  // O((T * n * maxFreq) * log(U))
+
+  // In the worst case: O((T * n * maxFreq) * log(U)) -> O((T + T) * log(U))
+  // The final would be: O(T + 1 + (T + T) * log(U)) -> O(T * log U) -> O(T)
+
   while (maxPQ.size() || waitQueue.peek()) {
-    console.log('-----------');
-    console.log('interval: ', interval);
-    console.log(res);
-    console.log('waitQueue: ', JSON.stringify(waitQueue.first));
+    // console.log('-----------');
+    // console.log('interval: ', interval);
+    // console.log(res);
+    // console.log('waitQueue: ', JSON.stringify(waitQueue.first));
 
     let peek = waitQueue.peek();
     if (peek && peek[0] === interval) {
       let [_, [task, count]] = waitQueue.dequeue();
       maxPQ.insert([task, count], count);
     }
-    console.log('waitQueue: ', JSON.stringify(waitQueue.first));
-    console.log(maxPQ.heap);
 
     if (!maxPQ.isEmpty()) {
       let [task, count] = maxPQ.pop();
-      res.push(task);
       if (count > 1) waitQueue.enqueue([interval + n + 1, [task, count - 1]])
-    } else {
-      res.push('idle');
     }
 
     interval++;
   }
 
-  console.log(res);
   return interval;
 };
 
 // console.log(leastInterval(["A", "A", "A", "B", "B", "B"], 2));
 // console.log(leastInterval(["A","C","A","B","D","B"], 1));
 console.log(leastInterval(["A", "A", "A", "B", "B", "B"], 3));
+console.log(leastInterval(["A","A","A","B","B","B"], 0));
 
 
+// --------------------------------------------------------
+// formula based solution
+
+
+// T = total number of tasks
+// U = number of **unique tasks** (max 26)
+// n = cooldown
+
+// if n < T : time = length tasks
+// if n >= T : time = (n+1)*(max_freq-1)+count_maxfreq_task
+
+// max_freq : task with the max frequency
+// count_maxfreq_task : number of taks that have the max frequency
