@@ -3,7 +3,7 @@ function ListNode(val, next) {
   this.next = next === undefined ? null : next;
 }
 
-import { arrayToLinkedList, linkedListToArray } from "./utility/linked list.js";
+import { arrToll, llToArr } from "./utilities/linked list.js";
 
 /**
  * @param {ListNode} head
@@ -124,56 +124,43 @@ var reverseKGroup2 = function (head, k) {
 // -----------------------------------------------------------------------------
 // again
 
-var reverseKGroup3 = function (head, k) {
+var reverseKGroup4 = function (head, k) {
 
-  const lookForTail = (head) => {
-    let count = 1;
+  const lookForTail = (head, count) => {
     let curr = head;
-    while (count % k && curr) {
+    while (count-- && curr) {
       curr = curr.next;
-      count++;
     }
-
-    return curr
+    return curr;
   }
 
-  let tail = lookForTail(head);
-  if (!tail) return head;
+  const dummy = new ListNode(-1, head);
+  let prev = dummy;
 
-  let dummy = new ListNode(-1, head);
-  let curr = head, prev = null, next;
-  head = tail;
-  let temp;
+  while (true) {
+    let curr = head;
+    let newHead = lookForTail(prev, k);
+    if (!newHead) break;
 
-  while (curr) {
-    console.log(curr.val);
+    prev.next = newHead;
 
-    if (curr === tail) {
-      console.log('H');
-      
-      next = curr.next;
+    // console.log([prev, curr, head, newHead]);
+    let saveNext = newHead.next;
+    while (curr !== saveNext) {
+      const next = curr.next;
       curr.next = prev;
       prev = curr;
       curr = next;
-
-      temp = dummy.next;
-      dummy.next.next = next;
-      dummy.next = prev;
-      dummy = temp;
-
-      tail = lookForTail(curr);
-      if (!tail) break;
-      continue;
     }
-
-    next = curr.next;
-    curr.next = prev;
-    prev = curr;
-    curr = next;
-
+    prev = head;
+    head.next = curr;
+    head = curr;
   }
-  return head;
+
+  return dummy.next;
 };
 
-let reversedLL = reverseKGroup3(arrayToLinkedList([1,2,3,4,5]), 2)
-console.log(linkedListToArray(reversedLL));
+// tc: O(n + n/k) -> O(n)
+// sc: O(1)
+
+console.log(llToArr(reverseKGroup4(arrToll([1, 2, 3, 4, 5]), 3)));
