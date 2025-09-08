@@ -97,7 +97,7 @@ var longestPalindrome3 = function (s) {
   let palins = Array(n).fill(0);
   let max = '';
 
-  // right most palindrome
+  // boundaries of the right most palindrome
   let l = 0, r = 0;
 
   function checkAtRange(left, right) {
@@ -115,6 +115,11 @@ var longestPalindrome3 = function (s) {
     // .....(l.....o.....r)
     // ...............i...
     // ..(lj...j..rj)......
+
+    // Because the symmetry of i is j, we could use it because it was already processed at that point
+    // j is at l + r - i
+
+    // we use the min because the palins[j] range could go over the r index
 
     if (i < r) {
       palins[i] = Math.min(r - i, palins[l + r - i]);
@@ -135,7 +140,7 @@ var longestPalindrome3 = function (s) {
   }
   // odd and even diameters are added by 1
   console.log(palins);
-  
+
   return max.replaceAll('#', '');
 };
 
@@ -153,7 +158,97 @@ var longestPalindrome3 = function (s) {
 // sc: O(n)
 
 
-console.log(longestPalindrome3('abcbaoabcba'));
+// console.log(longestPalindrome3('abcbaoabcba'));
 // it also works for even palindromes
-console.log(longestPalindrome3('abbv'));
-console.log(longestPalindrome3('abbbvdfd'));
+// console.log(longestPalindrome3('abbv'));
+// console.log(longestPalindrome3('abbbvdfd'));
+
+
+// --------------------------------------------------------------------------
+// redo: mine
+
+var longestPalindrome4 = function (s) {
+
+  let max = '';
+
+  function checkAtRange(left, right) {
+    while (left > 0 && right < s.length - 1 && s[left - 1] === s[right + 1]) {
+      left--;
+      right++;
+    }
+    let palin = s.slice(left, right + 1);
+    return palin.length > max.length ? palin : max;
+  }
+
+  for (let i = 0; i < s.length; i++) {
+    max = checkAtRange(i, i);
+    if (s[i] === s[i + 1]) {
+      max = checkAtRange(i, i + 1);
+    }
+  }
+
+  return max;
+};
+
+// console.log('res: ', longestPalindrome4('babadab'));
+// console.log('res: ', longestPalindrome4('ccc'));
+
+// tc: 
+// even: O( 2 * ((n/2)(n/2+1)/2) )
+// odd: O( 2 * ((n/2)(n/2+1)/2) - 1)
+// -> O(n**2)
+// sc: O(1)
+
+
+// --------------------------------------------------------------------------
+// redo: manacher's algorithm
+
+var longestPalindrome5 = function (s) {
+  let max = '';
+  // boundaries of the righ most palindrome
+  let l = 0, r = 0;
+
+  // add placeholder to deal with with even palindromes
+  s = '#' + s.split('').join('#') + '#';
+  let n = s.length;
+
+  // index of the right most palindrome for each char
+  const palins = new Array(n).fill(0);
+
+  function getPalinRange(left, right) {
+    while (left > 0 && right < n - 1 && s[left - 1] === s[right + 1]) {
+      left--;
+      right++;
+    }
+    return (right - left) / 2;
+  }
+
+  // iterate normally but reuse already computed chars
+  for (let i = 0; i < n; i++) {
+
+    // use r-i if palindrome goes outside the right most palindrome
+    if (i < r) {
+      palins[i] = Math.min(r - i, palins[l + r - i]);
+    }
+
+    // expand from center
+    palins[i] = getPalinRange(i - palins[i], i + palins[i]);
+
+    // update if there's a new right most palindrome
+    if (r <= i + palins[i]) {
+      l = i - palins[i];
+      r = i + palins[i];
+    }
+
+    // update new max palindrome if necessary
+    if (max.length < (2 * palins[i] + 1)) {
+      max = s.slice(i - palins[i], i + palins[i] + 1);
+    }
+  }
+
+  // console.log(palins);
+  return max.replaceAll('#', '');
+};
+
+console.log('res: ', longestPalindrome5('babad'));
+console.log('res: ', longestPalindrome5('ccc'));
