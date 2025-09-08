@@ -3,7 +3,7 @@ function ListNode(val, next) {
   this.next = (next === undefined ? null : next)
 }
 
-import { arrToll, llToArr } from "./utility/linked list.js";
+import { arrToll, llToArr } from "./utilities/linked list.js";
 
 /**
  * @param {ListNode} list1
@@ -16,22 +16,20 @@ var mergeTwoLists = function (l1, l2) {
   let dummy = new ListNode(-1);
   let curr = dummy;
 
-  // compare and add to last node
   while (l1 && l2) {
-    if (l1.val <= l2.val) {
+
+    if (l1.val < l2.val) {
       curr.next = l1;
-      curr = l1;
       l1 = l1.next;
     } else {
       curr.next = l2;
-      curr = l2;
       l2 = l2.next;
     }
+
+    curr = curr.next;
   }
 
-  // add leftovers
-  curr.next = l1 || l2;
-  // console.log('%o', curr);
+  curr.next = l1 ? l1 : l2;
 
   return dummy.next;
 }
@@ -39,11 +37,10 @@ var mergeTwoLists = function (l1, l2) {
 // tc: O(n+m) -> O(n)
 // sc: O(1)
 
-
-// console.log(mergeTwoLists(arrToll([1,2,3]),arrToll([4,5,6])));
 // console.log(mergeTwoLists(arrToll([1,2,3]),arrToll([])));
-let temp = mergeTwoLists(arrToll([1, 2, 5, 6]), arrToll([3, 4, 7, 9]));
-// console.log(JSON.stringify(temp, null, 2));
+// let temp = mergeTwoLists(arrToll([1, 2, 5, 6]), arrToll([3, 4, 7, 9]));
+// let temp = mergeTwoLists(arrToll([1, 2, 3]), arrToll([]));
+// console.log(llToArr(temp));
 
 
 
@@ -68,94 +65,66 @@ var mergeTwoLists = function (list1, list2) {
 };
 
 
-
-
 // console.log(mergeTwoLists(arrToll([1,2,5,6]),arrToll([3,4,7])));
 
 
-// ------------------------------------------------------------------------
-
-// iterative
-var mergeTwoListsAgain = function (l1, l2) {
-
-  let dummy = new ListNode(-1);
-  let curr = dummy;
-
-  // compare and add to last node
-  while (l1 && l2) {
-
-    let less = (l1.val <= l2.val) ? l1 : l2;
-
-    if (l1.val <= l2.val) {
-      curr.next = l1;
-      curr = l1;
-      l1 = l1.next;
-    } else {
-      curr.next = l2;
-      curr = l2;
-      l2 = l2.next;
-    }
-  }
-
-  // add leftovers
-  curr.next = l1 || l2;
-  // console.log('%o', curr);
-
-  return dummy.next;
-}
-
-temp = mergeTwoListsAgain(arrToll([1, 2, 5, 6]), arrToll([3, 4, 7, 9]));
-// console.log(JSON.stringify(temp, null, 2));
-
-// -------------------------------------------------------------------
-// again
-
-// var mergeTwoLists3 = function (l1, l2) {
-
-//   let dummy = new ListNode(-1);
-//   let curr = dummy;
-
-//   while (l1 && l2) {
-//     if (l1.val < l2.val) {
-//       curr.next = l1;
-//       curr = l1;
-//       l1 = l1.next;
-//     } else {
-//       curr.next = l2;
-//       curr = l2;
-//       l2 = l2.next;
-//     }
-//   }
-
-//   curr.next = l1? l1 : l2;
-
-//   return dummy.next;
-// }
-
-// let res3 = mergeTwoLists3(arrToll([1,2,4]), arrToll([1,3,4]));
-// console.log(llToArr(res3));
-
+//* -------------------------------------------------------------------
 
 // again recursive
 
-var mergeTwoLists4 = function (l1, l2) {
+var mergeTwoLists6 = function (l1, l2) {
 
   if (!l1) return l2;
   if (!l2) return l1;
 
   let curr;
-
   if (l1.val < l2.val) {
     curr = l1;
-    curr.next = mergeTwoLists4(l1.next, l2);
+    curr.next = mergeTwoLists6(l1.next, l2);
   } else {
     curr = l2;
-    curr.next = mergeTwoLists4(l1, l2.next);
+    curr.next = mergeTwoLists6(l1, l2.next);
   }
 
   return curr;
-
 }
 
-let res3 = mergeTwoLists4(arrToll([1, 2, 4]), arrToll([1, 3, 4]));
-console.log(llToArr(res3));
+
+
+// let res3 = mergeTwoLists4(arrToll([1, 2, 4]), arrToll([1, 3, 4]));
+// console.log(llToArr(res3));
+
+// -------------------------------------------------------------------
+
+// again: crappy way using OR
+
+var mergeTwoLists5 = function (l1, l2) {
+
+  let dummy = new ListNode(-1);
+  let curr = dummy;
+
+  while (l1 || l2) {
+
+    if (l1?.val < l2?.val) {
+      curr.next = l1;
+      l1 = l1.next;
+    } else if (l2?.val < l1?.val) {
+      curr.next = l2;
+      l2 = l2.next;
+    } else if (l1) {
+      curr.next = l1;
+      l1 = l1.next;
+    } else if (l2) {
+      curr.next = l2;
+      l2 = l2.next;
+    }
+
+    curr = curr.next;
+  }
+
+  return dummy.next;
+}
+
+// let res3 = mergeTwoLists5(arrToll([1, 2, 4]), arrToll([1, 3, 4]));
+// let res3 = mergeTwoLists5(arrToll([1, 2]), arrToll([]));
+// console.log(llToArr(res3));
