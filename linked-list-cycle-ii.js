@@ -61,7 +61,8 @@ var detectCycle2 = function (head) {
 
 
 // tc: O(n)
-// in any case we loop one time O(n)
+// in the worst case the fast pointer loops a fixed amount of times the 
+// loop part of the nodes, so O(constant*n)
 
 // sc: O(1)
 
