@@ -6,8 +6,7 @@
  * }
  */
 
-import { fa, sl } from "zod/v4/locales";
-import { arrToll, nodeAt } from "./utility/linked list.js";
+import { arrToll, nodeAt } from "./utilities/linked list.js";
 
 /**
  * @param {ListNode} head
@@ -123,11 +122,45 @@ var detectCycle5 = function (head) {
   return null;
 }
 
+// const head2 = arrToll([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+// nodeAt(head2, 8).next = nodeAt(head2, 2);
+// // console.log(nodeAt(head2, 8));
+
+// const head3 = arrToll([1, 2]);
+// nodeAt(head3, 1).next = nodeAt(head3, 0);
+
+// console.log(detectCycle5(head3));
+
+
+// ----------------------------------------------------------------------
+// redo
+
+var detectCycle6 = function (head) {
+
+  // first intersection
+  let slow = head, fast = head;
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow === fast) break;
+  }
+
+  if (!fast || !fast.next) return null;
+
+  slow = head;
+
+  while (slow !== fast) {
+    slow = slow.next;
+    fast = fast.next;
+  }
+
+  return slow;
+}
+
+
 const head2 = arrToll([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 nodeAt(head2, 8).next = nodeAt(head2, 2);
 // console.log(nodeAt(head2, 8));
 
-const head3 = arrToll([1, 2]);
-nodeAt(head3, 1).next = nodeAt(head3, 0);
 
-console.log(detectCycle5(head3));
+console.log(detectCycle6(head2));
