@@ -12,7 +12,7 @@ class Node {
 }
 
 
-class mQueue {
+class queue {
 
   constructor() {
     this.first = null;
@@ -48,7 +48,7 @@ class mQueue {
   }
 }
 
-class MaxPQ {
+class MaxPriorityQueue {
 
   constructor() {
     this.heap = []
@@ -101,7 +101,7 @@ class MaxPQ {
   }
 
   peek() {
-    return this.heap[0].value;
+    return this.heap.length ? this.heap[0].value : undefined;
   }
 
   pop() {
@@ -139,14 +139,14 @@ var leastInterval = function (tasks, n) {
     freqs[task] = (freqs[task] || 0) + 1;
   }
 
-  let maxPQ = new MaxPQ();
+  let maxPQ = new MaxPriorityQueue();
 
   // O(U * log(U)) -> O(26 * log(26)) -> O(1)
   for (const task in freqs) {
     maxPQ.insert([task, freqs[task]], freqs[task]);
   }
 
-  let waitQueue = new mQueue();
+  let waitQueue = new queue();
   let interval = 0;
 
   // based on the formula when n >= number of taks
@@ -188,8 +188,8 @@ var leastInterval = function (tasks, n) {
 
 // console.log(leastInterval(["A", "A", "A", "B", "B", "B"], 2));
 // console.log(leastInterval(["A","C","A","B","D","B"], 1));
-console.log(leastInterval(["A", "A", "A", "B", "B", "B"], 3));
-console.log(leastInterval(["A","A","A","B","B","B"], 0));
+// console.log(leastInterval(["A", "A", "A", "B", "B", "B"], 3));
+// console.log(leastInterval(["A", "A", "A", "B", "B", "B"], 0));
 
 
 // --------------------------------------------------------
@@ -205,3 +205,56 @@ console.log(leastInterval(["A","A","A","B","B","B"], 0));
 
 // max_freq : task with the max frequency
 // count_maxfreq_task : number of taks that have the max frequency
+
+
+// ---------------------------------------------------------------------
+// redo
+
+var leastInterval2 = function (tasks, n) {
+
+  const freqs = {};
+  for (const task of tasks) {
+    freqs[task] = (freqs[task] || 0) + 1;
+  }
+
+  const availableTasks = new MaxPriorityQueue();
+  // [task, freqLeft]
+  // if available use the task with more frequency
+  for (const task in freqs) {
+    availableTasks.insert([[task, freqs[task]], freqs[task]]);
+  }
+
+  // this is not a counter, is the index of each interval
+  let interval = 0;
+  // this will store in which interval index the task should be available
+  // [intervalID, [task, freqLeft]]
+  let cooldown = new queue();
+
+  while (!availableTasks.isEmpty() || cooldown.peek()) {
+    let cooled = cooldown.peek();
+
+    // check if there's a new cooled down task
+    // i.e. is the current interval matches the planned cooldown
+    if (cooled && cooled[0] === interval) {
+      // if it is then add to the available tasks
+      let [_, [task, freq]] = cooldown.dequeue();
+      availableTasks.insert([task, freq], freq);
+    }
+
+    // check available tasks and use the one with most frequency
+    if (!availableTasks.isEmpty()) {
+      // use it by popping it
+      let [task, freq] = availableTasks.pop();
+      // add to cooldown with a reduced frequency
+      if (freq > 1) cooldown.enqueue([interval + n + 1, [task, freq - 1]]);
+    }
+
+    // a used task or iddle will advance the interval index
+    interval++;
+  }
+
+  return interval;
+}
+
+console.log(leastInterval2(["A", "A", "A", "B", "B", "B"], 3));
+// console.log(leastInterval2(["A", "A", "A", "B", "B", "B"], 0));
