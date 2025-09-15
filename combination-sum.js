@@ -83,4 +83,42 @@ var combinationSum2 = function (candidates, target) {
 
 console.log(combinationSum2([2, 3, 5], 8));
 
-// tc:
+// tc: O(nlogn)
+// for each element we go a max depth of `target / min(candidates)`
+// This is a general not precise upper bound
+// not an actual value.
+// So for the backtracking we do O(n**(target / min(candidates)))
+// sc: 
+
+
+//* --------------------------------------------------------------------------
+// redo
+
+var combinationSum3 = function (candidates, target) {
+
+  let res = [];
+  candidates.sort((a, b) => a - b);
+
+  function backtrack(start, path, target) {
+
+    if (target === 0) {
+      res.push([...path]);
+      return;
+    }
+
+    for (let i = start; i < candidates.length; i++) {
+      const remainder = target - candidates[i];
+      if (remainder < 0) return;
+
+      path.push(candidates[i]);
+      backtrack(i, path, remainder);
+      path.pop();
+    }
+  }
+
+  backtrack(0, [], target);
+
+  return res;
+}
+
+console.log(combinationSum3([2, 3, 6, 7], 7));
