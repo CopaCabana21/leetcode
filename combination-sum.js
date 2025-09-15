@@ -88,7 +88,11 @@ console.log(combinationSum2([2, 3, 5], 8));
 // This is a general not precise upper bound
 // not an actual value.
 // So for the backtracking we do O(n**(target / min(candidates)))
-// sc: 
+
+// sc:
+// recursive depth is `target / min(candidates)`
+// at each level we add one element constant
+// So the time complexity would be O(target / min(candidates))
 
 
 //* --------------------------------------------------------------------------
