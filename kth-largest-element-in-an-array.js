@@ -3,9 +3,9 @@
  * @param {number} k
  * @return {number}
  */
-import { ppBinaryHeap } from "./utility/heaps.js"
+import { ppBinaryHeap } from "./utilities/heaps.js"
 
-// ------------------------------------------------------------
+//* ------------------------------------------------------------
 // brute force
 
 var findKthLargest = function (arr, k) {
@@ -18,7 +18,7 @@ var findKthLargest = function (arr, k) {
 // console.log(findKthLargest([3, 2, 3, 1, 2, 4, 5, 5, 6], 4));
 
 
-// --------------------------------------------------------------
+//* --------------------------------------------------------------
 // using min heap with k elements at max
 
 // min heap implementation
@@ -112,17 +112,17 @@ var findKthLargest = function (arr, k) {
 // console.log(findKthLargest([3, 2, 1, 5, 6, 4], 2));
 
 
-// ----------------------------------------------------------------
+//* ----------------------------------------------------------------
 // quick select
 
-// tc: O(n) on average
+// tc: O(n) on average only if we use a random pivot
 // worst case is O(n^2) for example in a array of [1,1,1,1,1,1,1,1,1]
 // sc: O(1)
 
 // - pivot at the right edge.
 // - iterative
 
-var findKthLargest = function (arr, k) {
+var findKthLargest2 = function (arr, k) {
 
 
   // because the quick sort finds the nth lowest, 
@@ -163,108 +163,105 @@ var findKthLargest = function (arr, k) {
 };
 
 
-// console.log(findKthLargest([3, 2, 1, 5, 6, 4], 2));
-
-// ----------------------------------------------------------------
-// quick select
-
-// randomize the pivot
-
-var findKthLargest2 = function (arr, k) {
-
-  let target = arr.length - k + 1;
-
-  function partition(arr, left, right) {
-
-    let pivot = arr[right];
-    let pointer = left;
-
-    for (let i = left; i < right; i++) {
-      if (arr[i] <= pivot) {
-        [arr[i], arr[pointer]] = [arr[pointer], arr[i]];
-        pointer++;
-      }
-    }
-    [arr[pointer], arr[right]] = [arr[right], arr[pointer]];
-
-    return pointer;
-  }
-
-  function paritionRandomized(arr, left, right) {
-    let randomPivot = left + Math.floor(Math.random() * (right - left + 1));
-    [arr[right], arr[randomPivot]] = [arr[randomPivot], arr[right]];
-    return partition(arr, left, right)
-  }
-
-  let left = 0, right = arr.length - 1;
-  let pivotPos;
-
-  while (true) {
-
-    pivotPos = paritionRandomized(arr, left, right);
-
-    if (pivotPos === target - 1) break;
-    else if (target - 1 < pivotPos) right = pivotPos - 1;
-    else left = pivotPos + 1;
-  }
-
-  return arr[pivotPos];
-
-};
-
 // console.log(findKthLargest2([3, 2, 1, 5, 6, 4], 2));
-console.log(findKthLargest2([1, 2, 3, 4, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -5, -4, -3, -2, -1], 17));
 
-
-// ----------------------------------------------------------------
+// * ---------------------------------------------------------------
 // quick select
-
-// leetcode added a test [1,1,1,1,....,1,1] which makes a time linit exceded
+// randomize the pivot
 
 var findKthLargest3 = function (arr, k) {
 
-  let target = arr.length - k;
-  let dupLength;
+  const target = arr.length - k;
+
+  function swap(arr, i, j) {
+    const temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
 
   function partition(arr, left, right) {
-    dupLength = 0;
-    let pivot = arr[right];
+
+    const pivotIndex = left + Math.floor(Math.random() * (right - left + 1));
+    const pivot = arr[pivotIndex];
+    swap(arr, pivotIndex, right);
+
     let pointer = left;
-
     for (let i = left; i < right; i++) {
-      if (arr[i] < pivot) {
-        [arr[i], arr[pointer]] = [arr[pointer], arr[i]];
+      if (arr[i] <= pivot) {
+        swap(arr, pointer, i);
         pointer++;
       }
     }
-
-    for (let i = pointer; i < right; i++) {
-      if (arr[i] === pivot) {
-        [arr[i], arr[pointer]] = [arr[pointer], arr[i]];
-        pointer++;
-        dupLength++;
-      }
-    }
-
-    [arr[pointer], arr[right]] = [arr[right], arr[pointer]];
-    // console.log('*', pivot, left, right, arr, dupLength, pivotPos);
+    swap(arr, pointer, right);
 
     return pointer;
   }
 
   let left = 0, right = arr.length - 1;
-  let pivotPos;
-
+  let pointer;
   while (true) {
-    pivotPos = partition(arr, left, right);
-    // console.log(arr, left, right, '--', dupLength, pivotPos);
-
-    if (pivotPos - dupLength <= target && target <= pivotPos) break;
-    else if (target < pivotPos) right = pivotPos - 1;
-    else left = pivotPos + 1;
+    pointer = partition(arr, left, right);
+    if (pointer === target) break;
+    else if (pointer < target) left = pointer + 1;
+    else right = pointer - 1;
   }
 
-  return arr[pivotPos];
-};
+  return arr[pointer]
+}
 
-console.log(findKthLargest3([1, 2, 3, 4, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -5, -4, -3, -2, -1], 17));
+// console.log(findKthLargest3([1, 2, 3, 4, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -5, -4, -3, -2, -1], 17));
+// console.log(findKthLargest3([3, 2, 1, 5, 6, 4], 2));
+// console.log(findKthLargest3([-1, -1], 2));
+
+
+//* ----------------------------------------------------------------
+
+// leetcode added a test [1,1,1,1,....,1,1] which makes a time limit exceded
+// random pivot, lotumo's partition in-place
+
+var findKthLargest5 = function (arr, k) {
+
+  const target = arr.length - k;
+
+  function swap(arr, i, j) {
+    const temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
+
+  function partition(arr, left, right) {
+
+    const pivotIndex = left + Math.floor(Math.random() * (right - left + 1));
+    const pivot = arr[pivotIndex];
+    let i = left, lt = left, gt = right;
+    while (i <= gt) {
+      if (arr[i] < pivot) {
+        swap(arr, lt, i);
+        i++;
+        lt++;
+      } else if (arr[i] > pivot) {
+        swap(arr, gt, i);
+        gt--;
+      } else {
+        i++;
+      }
+    }
+    return [lt, gt];
+  }
+
+  let left = 0, right = arr.length - 1;
+  let lt, gt;
+  while (left <= right) {
+    [lt, gt] = partition(arr, left, right);
+    console.log(lt, gt);
+    if (target < lt) right = lt - 1;
+    else if (target > gt) left = gt + 1;
+    else break;
+  }
+
+  return arr[lt]
+}
+
+// console.log(findKthLargest5([1, 2, 3, 4, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -5, -4, -3, -2, -1], 17));
+console.log(findKthLargest5([3, 2, 1, 5, 6, 4], 2));
+// console.log(findKthLargest5([-1, -1], 2));
