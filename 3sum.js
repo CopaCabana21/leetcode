@@ -55,7 +55,7 @@ var threeSum = function (nums) {
 // console.log(threeSum([0, 0, 0]));
 
 
-// -----------------------------------------------------------
+//* ---------------------------------------------------------------------------
 
 var threeSum2 = function (nums) {
 
@@ -124,5 +124,52 @@ var threeSum2 = function (nums) {
 // sc: O(n)
 
 // console.log(threeSum2([0, 0, 0]));
-console.log(threeSum2([-1, -1, 1, 2, -1, -4]));
+// console.log(threeSum2([-1, -1, 1, 2, -1, -4]));
 // console.log(threeSum2([-2, -3, -1, -1, 0, 2, 1, 3, -4]));
+
+//* ---------------------------------------------------------------------------
+
+// reuse two-sum solution
+// this gives a timeout
+
+var threeSum3 = function (nums) {
+
+  let res = [];
+  const seen = new Set();
+
+  function findPair(skip, target) {
+    const map = {};
+    const pairs = [];
+    for (let i = 0; i < nums.length; i++) {
+      if (i === skip) continue;
+      let rest = target - nums[i];
+      if (rest in map) pairs.push([nums[i], nums[map[rest]]]);
+      map[nums[i]] = i;
+    }
+    return pairs;
+  }
+
+  for (let i = 0; i < nums.length; i++) { // n
+    const pairs = findPair(i, -(nums[i])); // O(n)
+    for (const pair of pairs) { // O(n) worst case
+      const triplet = [nums[i], ...pair].sort((a, b) => a - b); // O(3log3)
+      // [0,0,0,0,0,...,0] worst case.
+      // each one could expand to n/2 pairs
+      // so at worst space is O(n^2)
+      const key = triplet.join(',');
+      if (!seen.has(key)) {
+        res.push(triplet);
+        seen.add(key)
+      }
+    }
+  }
+
+  return res;
+}
+
+// tc: O(n*n*n*C) -> O(n**3)
+// sc: O(n**2)
+
+console.log(threeSum3([-1, 0, 1, 2, -1, -4]));
+
+
