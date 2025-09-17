@@ -41,7 +41,7 @@ var threeSum = function (nums) {
         let triplet = [nums[i], nums[j], nums[k]];
         res.push(triplet);
 
-        // check if next j and k is the same as before
+        // check future duplicates
         while (nums[j] === triplet[1] && j < k) j++;
         while (nums[k] === triplet[2] && j < k) k--;
       }
@@ -170,6 +170,43 @@ var threeSum3 = function (nums) {
 // tc: O(n*n*n*C) -> O(n**3)
 // sc: O(n**2)
 
-console.log(threeSum3([-1, 0, 1, 2, -1, -4]));
+// console.log(threeSum3([-1, 0, 1, 2, -1, -4]));
 
 
+//* ---------------------------------------------------------------------
+
+// redo
+
+var threeSum4 = function (nums) {
+
+  let res = [];
+  nums.sort((a, b) => a - b);
+
+  // [-1,0,1,2,-1,-4]
+  // [-4,-1,-1,0,1,2]
+  //   i  j        k
+
+  for (let i = 0; i < nums.length; i++) {
+
+    if (nums[i] > 0) break;
+    if (i > 0 && nums[i] === nums[i - 1]) continue;
+    let j = i + 1, k = nums.length - 1;
+
+    while (j < k) {
+      const sum = nums[i] + nums[j] + nums[k];
+      if (sum < 0) j++;
+      else if (sum > 0) k--;
+      else {
+        res.push([nums[i], nums[j], nums[k]]);
+        j++;
+        k--;
+        while (j < k && nums[j] === nums[j - 1]) j++;
+        while (j < k && nums[k] === nums[k + 1]) k--;
+      }
+    }
+  }
+
+  return res;
+}
+
+console.log(threeSum4([-1, 0, 1, 2, -1, -4]));
