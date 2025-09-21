@@ -1,13 +1,20 @@
-/**
- * @param {number[]} hand
- * @param {number} groupSize
- * @return {boolean}
- */
-
 class mMinHeap {
 
-  constructor() {
-    this.arr = []
+  constructor(arr = []) {
+    this.heap = [];
+    this.buildHeap(arr);
+
+  }
+
+  // Bulk heapify (Floyd’s)
+  // tc: O(n)
+  // each heapifyDown takes O(logn) but the agregated work takes O(n)
+  buildHeap(arr) {
+    this.heap = arr;
+    const startIdx = Math.floor(this.heap.length / 2) - 1;
+    for (let i = startIdx; i >= 0; i--) {
+      this._heapifyDown(i);
+    }
   }
 
   _left(i) {
@@ -23,118 +30,154 @@ class mMinHeap {
   }
 
   _swap(i, j) {
-    [this.arr[i], this.arr[j]] = [this.arr[j], this.arr[i]];
+    [this.heap[i], this.heap[j]] = [this.heap[j], this.heap[i]];
   }
 
   _heapifyUp() {
-    let arr = this.arr;
-    let i = this.arr.length - 1;
+    let heap = this.heap;
+    let i = this.heap.length - 1;
 
-    while (i > 0 && arr[this._parent(i)] > arr[i]) {
+    while (i > 0 && heap[this._parent(i)] > heap[i]) {
       let p = this._parent(i);
-      [arr[p], arr[i]] = [arr[i], arr[p]]
+      [heap[p], heap[i]] = [heap[i], heap[p]]
       i = p;
     }
   }
 
   _heapifyDown(i) {
-    let arr = this.arr;
+    let heap = this.heap;
     while (true) {
       let left = 2 * i + 1;
       let right = 2 * i + 2;
       let smallest = i;
 
-      if (left < arr.length && arr[smallest] > arr[left]) smallest = left;
-      if (right < arr.length && arr[smallest] > arr[right]) smallest = right;
+      if (left < heap.length && heap[smallest] > heap[left]) smallest = left;
+      if (right < heap.length && heap[smallest] > heap[right]) smallest = right;
 
       if (smallest === i) break;
-      [arr[smallest], arr[i]] = [arr[i], arr[smallest]]
+      [heap[smallest], heap[i]] = [heap[i], heap[smallest]]
       i = smallest;
     }
   }
 
   insert(val) {
-    this.arr.push(val);
+    this.heap.push(val);
     this._heapifyUp();
   }
 
   peek() {
-    return this.arr[0];
+    return this.heap[0];
   }
 
   pop() {
-    if (this.arr.length === 0) return undefined;
-    if (this.arr.length === 1) return this.arr.pop();
+    if (this.heap.length === 0) return undefined;
+    if (this.heap.length === 1) return this.heap.pop();
 
-    let min = this.arr[0];
-    this.arr[0] = this.arr.pop();
+    let min = this.heap[0];
+    this.heap[0] = this.heap.pop();
     this._heapifyDown(0);
 
     return min;
   }
 
   size() {
-    return this.arr.length;
+    return this.heap.length;
   }
 
   isEmpty() {
-    return this.arr.length === 0;
+    return this.heap.length === 0;
   }
 
+  length() {
+    return this.heap.length;
+  }
 
 }
 
+
+/**
+ * @param {number[]} hand
+ * @param {number} groupSize
+ * @return {boolean}
+ */
+
+
+//* -------------------------------------------------------------------------
+
+// naive min heap
+
 var isNStraightHand = function (hand, groupSize) {
 
-  let mh = new mMinHeap();
+  if (hand.length % groupSize !== 0) return false;
+
+  const heap = new mMinHeap(hand); // O(n)
+  // O(nlogn) without buildHeap
   let dup = [];
-
-  for (const card of hand) {
-    mh.insert(card);
-  }
-
-  let currSet = [];
-  while (!mh.isEmpty()) {
-    let next = mh.pop();
-
-    console.log(next, currSet, dup);
-
-    if (!currSet.length) {
-      currSet.push(next);
-    } else {
-      let top = currSet.at(-1);
-      if (next === top) {
-        dup.push(next);
-      } else if (next === top + 1) {
-        currSet.push(next);
-      } else {
-        return false
+  while (!heap.isEmpty()) { // roughly O(n / groupSize)
+    let cont = groupSize - 1;
+    let last = heap.pop(); // O(log n)
+    while (cont--) { // O(groupSize)
+      let curr = heap.pop(); // O(log n)
+      if (last === curr) {
+        dup.push(curr);
+        cont++;
       }
+      else if (curr - last !== 1) return false;
+      else last = curr;
     }
 
-    if (currSet.length === groupSize) {
-      currSet = [];
-      while(dup.length){
-        mh.insert(dup.pop())
-      }
-    };
+    // when there are k duplicates
+    while (dup.length > 0) { // O(k)
+      heap.insert(dup.pop()); // O(logn)
+    }
   }
 
-  return currSet.length === 0;
+  return true;
 };
 
+// tc:
+// without duplicates: (n / groupSize) × groupSize × O(log n) = O(n log n).
+// with duplicates in the worst case each element can be reinserted n times.
+// The number of reinsertions is bounded by n per element,
+// tc: O(n^2 log n)
+// sc: O(n*k) -> O(n)
 
-// n: number of cards
-// k: group size
-// u: number of cards without duplicates
-// maxFreqCard
-// max reinserts per card ≤ g = floor(n / k)
-
-
-// tc: dont know which is
-// sc: O(n)
-
+// console.log(isNStraightHand([1, 2, 3, 4, 5], 4));
 // console.log(isNStraightHand([1, 2, 3, 6, 2, 3, 4, 7, 8], 3));
-// console.log(isNStraightHand([1,2,3,4,5], 4));
-console.log(isNStraightHand([34, 80, 89, 15, 38, 69, 19, 17, 97, 98, 26, 77, 8, 31, 79, 70, 103, 3, 13, 21, 81, 53, 33, 14, 60, 68, 33, 59, 84, 23, 97, 90, 76, 82, 66, 83, 23, 22, 16, 18, 98, 25, 16, 61, 84, 100, 4, 68, 101, 25, 23, 9, 10, 55, 2, 67, 39, 52, 102, 99, 40, 11, 83, 24, 81, 53, 96, 23, 13, 24, 99, 67, 22, 51, 31, 58, 78, 88, 5, 15, 24, 32, 81, 91, 96, 16, 54, 22, 56, 69, 14, 82, 32, 34, 83, 24, 37, 82, 54, 21,96,96,96]
-  , 4));
+
+
+//* ----------------------------------------------------------------------
+
+var isNStraightHand2 = function (hand, groupSize) {
+
+  if (hand.length % groupSize !== 0) return false;
+
+  const freqs = new Map();
+
+  // O(n)
+  for (const card of hand) {
+    freqs.set(card, (freqs.get(card) || 0) + 1);
+  }
+
+  // m unique cards, sorting takes O(mlogm)
+  const sorted = Array.from(freqs.keys()).sort((a, b) => a - b);
+
+  for (const card of sorted) { // each m is visited
+    const count = freqs.get(card);
+
+    if (count > 0) {
+      for (let i = 0; i < groupSize; i++) { // with W group size
+        let next = card + i;
+        if ((freqs.get(next) || 0) < count) return false;
+        freqs.set(next, freqs.get(next) - count);
+      }
+    }
+  }
+
+  return true;
+}
+
+// tc: O(mlogm + m*W)
+// sc: O(m)
+
+console.log(isNStraightHand2([1, 2, 3, 6, 2, 3, 4, 7, 8], 3));

@@ -7,7 +7,7 @@ class Node {
   }
 }
 
-// goes from least to most recent used from left to right
+// goes from most to least recent used from left to right
 
 class DoubleLL {
   constructor() {
@@ -139,4 +139,4 @@ LRUCache.prototype.put = function (key, value) {
 // console.log(obj.get('b'));
 // console.log(obj);
 
-// ------------------------------------------
+//* ---------------------------------------------------------------------------
