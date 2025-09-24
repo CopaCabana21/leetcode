@@ -35,7 +35,7 @@ var postorderTraversal = function (root) {
 
 
 // let root = new TreeNode(1, new TreeNode(2, new TreeNode(3), null), null)
-let root = new TreeNode(1, new TreeNode(2, new TreeNode(4), new TreeNode(5, new TreeNode(6), new TreeNode(7))), new TreeNode(3, null, new TreeNode(8, new TreeNode(9), null)));
+// let root = new TreeNode(1, new TreeNode(2, new TreeNode(4), new TreeNode(5, new TreeNode(6), new TreeNode(7))), new TreeNode(3, null, new TreeNode(8, new TreeNode(9), null)));
 // let root = null;
 // console.log(postorderTraversal(root));
 
@@ -46,7 +46,7 @@ var postorderTraversal2 = function (root) {
   let node = root;
   let parents = [];
   let res = [];
-  while (node || parents.length > 0) {
+  while (node || parents.length > 0) {// O(n)
     if (node) {
       res.push(node.val);
       parents.push(node);
@@ -56,14 +56,14 @@ var postorderTraversal2 = function (root) {
       node = node.left;
     }
   }
-  return res.reverse();
+  return res.reverse(); // O(n)
 };
 
 // let root2 = new TreeNode(1, new TreeNode(2, new TreeNode(4), new TreeNode(5, new TreeNode(6), new TreeNode(7))), new TreeNode(3, null, new TreeNode(8, new TreeNode(9), null)));
 // console.log(postorderTraversal2(root));
 
 
-// tc: O(3n + n) -> O(n)
+// tc: O(n)
 // sc: O(n) at worst, O(logn) at best
 
 // -----------------------------------------------
@@ -74,7 +74,7 @@ var postorderTraversal2 = function (root) {
 // we add to second stack in reverse order: root->right->left
 
 var postorderTraversal3 = function (root) {
-  if(!root) return [];
+  if (!root) return [];
   let stack1 = [root];
   let stack2 = [];
   let res = [];
@@ -93,8 +93,35 @@ var postorderTraversal3 = function (root) {
   return res;
 };
 
-let root2 = new TreeNode(1, new TreeNode(2, new TreeNode(4), new TreeNode(5, new TreeNode(6), new TreeNode(7))), new TreeNode(3, null, new TreeNode(8, new TreeNode(9), null)));
-console.log(postorderTraversal3(root));
+// let root2 = new TreeNode(1, new TreeNode(2, new TreeNode(4), new TreeNode(5, new TreeNode(6), new TreeNode(7))), new TreeNode(3, null, new TreeNode(8, new TreeNode(9), null)));
+// console.log(postorderTraversal3(root));
 
 // tc: at worst skewed: O(2n + n) -> O(n)
 // sc: O(n) at worst, O(logn) at best
+
+
+//* -------------------------------------------------------------
+// redo
+
+var postorderTraversal4 = function (root) {
+
+  let node = root;
+  let parents = [];
+  let res = [];
+
+  while (node || parents.length > 0) {
+    if (node) {
+      res.push(node.val);
+      parents.push(node);
+      node = node.right;
+    } else {
+      node = parents.pop();
+      node = node.left;
+    }
+  }
+
+  return res.reverse();
+}
+
+let root3 = new TreeNode(1, new TreeNode(2, new TreeNode(4), new TreeNode(5, new TreeNode(6), new TreeNode(7))), new TreeNode(3, null, new TreeNode(8, new TreeNode(9), null)));
+console.log(postorderTraversal4(root3));
