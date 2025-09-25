@@ -21,6 +21,7 @@
 // pop stack until the left min index is found, then use index value from the stack
 
 // -----------------------------------------------------------------------------
+// monotonic stack
 
 var sumSubarrayMins = function (arr) {
 
@@ -62,14 +63,53 @@ var sumSubarrayMins = function (arr) {
 
 };
 
-// tc: O(n)
+// tc:
+// each index is pushed onced and popped at most once
+// so for each element theres O(1)
+// bigO: O(n)
+
 // sc: O(n)
 
 // console.log(sumSubarrayMins([3,1,2,4]));
 // console.log(sumSubarrayMins([11,81,94,43,3]));
 
 
-// -----------------------------------------------------------------------
+// * --------------------------------------------------------------------
+// monotonic stack, starting from zero
+
+var sumSubarrayMins4 = function (arr) {
+
+  let res = [];
+  let stack = [];
+  let nextLessIndex;
+  let sum = 0;
+
+  for (let i = 0; i < arr.length; i++) {
+    console.log(i, stack, nextLessIndex);
+    while (stack.length && arr[i] < arr[stack[stack.length - 1]]) {
+      stack.pop();
+    }
+
+    if (stack.length) {
+      nextLessIndex = stack[stack.length - 1];
+      res[i] = res[nextLessIndex] + arr[i] * (i - nextLessIndex);
+    } else {
+      res[i] = (i + 1) * arr[i];
+    }
+    stack.push(i)
+  }
+  for (let i = 0; i < res.length; i++) {
+    sum += res[i]
+  }
+  return sum % (10 ** 9 + 7);
+}
+
+// tc: O(2*n + n)
+// sc: O(n + n)
+
+// console.log(sumSubarrayMins4([11, 81, 94, 43, 3]));
+
+//* ------------------------------------------------------------------------
 
 // prepending 0 to arr
 
@@ -141,7 +181,7 @@ var sumSubarrayMins3 = function (arr) {
   }
 
   console.log(sum);
-  return sum % (10**9 + 7);
+  return sum % (10 ** 9 + 7);
 
 };
 
@@ -149,36 +189,3 @@ var sumSubarrayMins3 = function (arr) {
 
 // console.log(sumSubarrayMins3([1, 2, 1, 2, 1]));
 
-
-// again: using monotoic
-var sumSubarrayMins4 = function (arr) {
-
-  let res = [];
-  let stack = [];
-  let nextLessIndex;
-  let sum = 0;
-
-  for (let i = 0; i < arr.length; i++) {
-    console.log(i, stack, nextLessIndex);
-    while (stack.length && arr[i] < arr[stack[stack.length - 1]]) {
-      stack.pop();
-    }
-
-    if (stack.length) {
-      nextLessIndex = stack[stack.length - 1];
-      res[i] = res[nextLessIndex] + arr[i] * (i - nextLessIndex);
-    } else {
-      res[i] = (i + 1) * arr[i];
-    }
-    stack.push(i)
-  }
-  for (let i = 0; i < res.length; i++) {
-    sum += res[i]
-  }
-  return sum % (10**9 + 7);
-}
-
-// tc: O(2*n + n)
-// sc: O(n + n)
-
-console.log(sumSubarrayMins4([11, 81, 94, 43, 3]));
