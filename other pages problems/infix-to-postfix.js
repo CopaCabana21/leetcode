@@ -91,7 +91,7 @@ function infixToPostfix2(str) {
     }
 
     if (str[i] in priority) {
-      while (stack.length && operators[operators.length - 1] !== '(' && priority[str[i]] >= priority[operators[operators.length - 1]]) {
+      while (operators.length && operators[operators.length - 1] !== '(' && priority[str[i]] >= priority[operators[operators.length - 1]]) {
         postfix.push(operators.pop());
       }
       operators.push(str[i])
@@ -112,6 +112,58 @@ function infixToPostfix2(str) {
 // console.log(infixToPostfix2("a*b+c^d/e^f"));
 // console.log(infixToPostfix2("(p+q)*(m-n)"));
 console.log(infixToPostfix2("a+b*(c^d-e)^(f+g*h)-i"));
+
+// "a-b*c^d" -> "abcd^*-"
+// "a*b+c^d" -> "ab*cd^+"
+
+
+//* -------------------------------------------------------------------------
+// redo
+console.log('-'.repeat(70));
+
+function infixToPostfix3(str) {
+
+  const priority = { '+': 1, '-': 1, '/': 2, '*': 2, '^': 3 };
+  const stack = [];
+  let res = [];
+
+
+  for (const char of str) {
+
+    if (char === '(') {
+      stack.push(char);
+      continue;
+    }
+
+    if (char === ')') {
+      while (stack[stack.length - 1] !== '(') res.push(stack.pop());
+      stack.pop();
+      continue;
+    }
+
+
+    if (char in priority) {
+      while (
+        stack.length > 0 &&
+        priority[char] <= priority[stack[stack.length - 1]]
+      ) {
+        res.push(stack.pop())
+      }
+      stack.push(char)
+    } else {
+      res.push(char)
+    }
+  }
+
+  while (stack.length > 0) {
+    res.push(stack.pop())
+  }
+
+  return res.join('');
+}
+
+console.log(infixToPostfix3("a+b*(c^d-e)^(f+g*h)-i"));
+
 
 // "a-b*c^d" -> "abcd^*-"
 // "a*b+c^d" -> "ab*cd^+"
