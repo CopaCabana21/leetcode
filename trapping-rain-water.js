@@ -100,3 +100,40 @@ var trap2 = function (height) {
 
 console.log(trap2([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
 ));
+
+
+//* -------------------------------------------------------------------------
+// redo
+
+var trap3 = function (height) {
+
+  let maxLeftHeight = 0;
+  let maxRightHeight = 0;
+  let i = 0, j = height.length - 1;
+  let sum = 0;
+
+  while (i < j) {
+    if (height[i] <= height[j]) {
+      if (height[i] >= maxLeftHeight) {
+        maxLeftHeight = height[i];
+      } else {
+        sum += (maxLeftHeight - height[i])
+      }
+      i++;
+    } else {
+      if (height[j] >= maxRightHeight) {
+        maxRightHeight = height[j];
+      } else {
+        sum += (maxRightHeight - height[j])
+      }
+      j--;
+    }
+  }
+
+  return sum;
+};
+
+console.log(trap3([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
+));
+
+
