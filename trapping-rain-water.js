@@ -98,6 +98,9 @@ var trap2 = function (height) {
   return sum;
 };
 
+// tc: O(n)
+// sc: O(1)
+
 console.log(trap2([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
 ));
 
