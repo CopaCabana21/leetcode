@@ -191,7 +191,8 @@ console.log(twitter.getNewsFeed(1));  // User 1's news feed should return a list
 console.log(twitter);
 
 // tc: for getNewsFeed:
-// O(F * 10 * log 10) + O(log10 + 10) => O(F)
+// O(F * 10 * log 10) + O(log10 + 10) -> O(F*log 10)
+// follow/unfollow: O(1)
 
 // Let F = number of followees
 // You scan up to F * 10 tweets
@@ -200,7 +201,8 @@ console.log(twitter);
 
 // sc: heap size = feed size = O(10) -> O(1)
 // followee size = O(F)
-
+// sc final: O(n + t)
+// n number of users, t is number of tweets
 
 
 
